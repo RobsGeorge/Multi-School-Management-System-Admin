@@ -20,12 +20,15 @@ class InstallerController extends Controller {
 
     public function checkPurchaseCode(Request $request) {
         try {
+<<<<<<< HEAD
             // Debug: Check if .env file is writable
             $envPath = base_path('.env');
             if (!is_writable($envPath)) {
                 throw new Exception("Cannot write to .env file at: $envPath. Current permissions: " . substr(sprintf('%o', fileperms($envPath)), -4));
             }
             
+=======
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             EnvSet::setKey('APPSECRET', 1234567890);
             EnvSet::save();
             return redirect()->route('LaravelWizardInstaller::install.database');

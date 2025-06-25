@@ -37,6 +37,10 @@
         "stripe/stripe-php": "^10.0"
     },
     "require-dev": {
+<<<<<<< HEAD
+=======
+        "roave/security-advisories": "dev-latest",
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
         "barryvdh/laravel-debugbar": "^3.6",
         "barryvdh/laravel-ide-helper": "^2.13",
         "beyondcode/laravel-query-detector": "^1.7",
@@ -44,9 +48,13 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
+<<<<<<< HEAD
         "phpunit/phpunit": "^10.0",
         "roave/security-advisories": "dev-latest",
         "vimeo/psalm": "^6.0@dev"
+=======
+        "phpunit/phpunit": "^10.0"
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
     },
     "autoload": {
         "psr-4": {

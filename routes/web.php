@@ -67,7 +67,10 @@ use App\Services\CachingService;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Request;
+=======
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
@@ -517,11 +520,14 @@ Route::group(['middleware' => ['Role', 'auth', 'checkSchoolStatus', 'status']], 
 
         });
         Route::resource('schools', SchoolController::class);
+<<<<<<< HEAD
         Route::get('schools/{id}/subdomain-health', [SchoolController::class, 'checkSubdomainHealth'])->name('schools.subdomain-health');
         Route::get('schools/subdomain-health/all', [SchoolController::class, 'getAllSubdomainHealth'])->name('schools.subdomain-health-all');
         Route::get('schools/subdomain/status', function() {
             return view('schools.subdomain-status');
         })->name('schools.subdomain-status');
+=======
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
 
         /*** Form Fields ***/
         Route::group(['prefix' => 'form-fields'], static function () {
@@ -893,6 +899,7 @@ Route::get('demo-tokens', static function () {
         });
     }
 });
+<<<<<<< HEAD
 
 // Test route for debugging schools show method
 Route::get('/test-schools-show', function() {
@@ -917,3 +924,5 @@ Route::get('/test-schools-show', function() {
         ], 500);
     }
 });
+=======
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327

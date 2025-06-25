@@ -320,6 +320,7 @@
         function successFunction() {
             $('#editAdminModal').modal('hide');
         }
+<<<<<<< HEAD
         
         // Add error handling for the bootstrap table
         $(document).ready(function() {
@@ -344,5 +345,7 @@
                 console.log('Table loaded successfully:', data);
             });
         });
+=======
+>>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
     </script>
 @endsection
