@@ -43,7 +43,16 @@ class SchoolController extends Controller {
     private GuidanceInterface $guidance;
     private SubdomainService $subdomainService;
 
-    public function __construct(SchoolInterface $school, UserInterface $user, PackageInterface $package, CachingService $cache, SubscriptionService $subscriptionService, SchoolSettingInterface $schoolSettings, GuidanceInterface $guidance, SubdomainService $subdomainService) {
+    public function __construct(
+        SchoolInterface $school,
+        UserInterface $user,
+        PackageInterface $package,
+        CachingService $cache,
+        SubscriptionService $subscriptionService,
+        SchoolSettingInterface $schoolSettings,
+        GuidanceInterface $guidance,
+        SubdomainService $subdomainService
+    ) {
         $this->schoolsRepository = $school;
         $this->userRepository = $user;
         $this->package = $package;
