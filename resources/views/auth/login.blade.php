@@ -18,7 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ __('general.login') }} || {{ config('app.name') }}</title>
+    <title>{{ __('login') }} || {{ config('app.name') }}</title>
 
     @include('layouts.include')
 
@@ -81,17 +81,17 @@
                             <form action="{{ route('login') }}" id="frmLogin" method="POST" class="pt-3">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="email">{{ __('general.email') }}</label>
+                                    <label for="email">{{ __('email') }}</label>
                                     <input id="email" type="email" class="form-control rounded-lg form-control-lg"
                                         name="email" value="{{ old('email') }}" required autocomplete="email"
-                                        autofocus placeholder="{{ __('general.email') }}">
+                                        autofocus placeholder="{{ __('email') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">{{ __('general.password') }}</label>
+                                    <label for="password">{{ __('password') }}</label>
                                     <div class="input-group">
                                         <input id="password" type="password"
                                             class="form-control rounded-lg form-control-lg" name="password" required
-                                            autocomplete="current-password" placeholder="{{ __('general.password') }}">
+                                            autocomplete="current-password" placeholder="{{ __('password') }}">
                                         <div class="input-group-append" cursor="pointer" id="togglePasswordShowHide">
                                             <span class="input-group-text">
                                                 <i class="fa fa-eye-slash" id="togglePassword"></i>
@@ -103,17 +103,17 @@
                                 @if (Route::has('password.request'))
                                     <div class="my-2 d-flex justify-content-end align-items-center">
                                         <a class="auth-link text-blue" href="{{ route('password.request') }}">
-                                            {{ __('general.forgot_password') }}
+                                            {{ __('forgot_password') }}
                                         </a>
                                     </div>
                                 @endif
                                 <div class="mt-3">
-                                    <input type="submit" name="btnlogin" id="login_btn" value="{{ __('general.login') }}"
+                                    <input type="submit" name="btnlogin" id="login_btn" value="{{ __('login') }}"
                                         class="btn btn-block btn-theme btn-lg font-weight-medium auth-form-btn rounded-lg" />
                                 </div>
                                 <div class="my-2 d-flex justify-content-end align-items-center">
                                     <a class="text-blue" href="#" data-bs-toggle="modal" data-bs-dismiss="offcanvas" data-bs-target="#staticBackdrop">
-                                        {{ __('general.new_user_signup') }}
+                                        {{ __('New user Sign up to manage your school activities seamlessly') }}
                                     </a>
                                 </div>
                             </form>
