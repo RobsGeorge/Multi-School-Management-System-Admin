@@ -17,30 +17,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    {{-- <link href="{{ asset('assets/home_page/css/style.css') }}" rel="stylesheet"> --}}
 
-    <title>{{ __('login') }} || {{ config('app.name') }}</title>
+    <title>{{ __('general.login') }} || {{ config('app.name') }}</title>
 
     @include('layouts.include')
 
     <style>
         :root {
-        --primary-color: {{ $systemSettings['theme_primary_color'] ?? '#56cc99' }};
-        --secondary-color: {{ $systemSettings['theme_secondary_color'] ?? '#215679' }};
-        --secondary-color1: {{ $systemSettings['theme_secondary_color_1'] ?? '#38a3a5' }};
-        --primary-background-color: {{ $systemSettings['theme_primary_background_color'] ?? '#f2f5f7' }};
-        --text--secondary-color: {{ $systemSettings['theme_text_secondary_color'] ?? '#5c788c' }};
-        
-    }
-    .modal .modal-dialog {
-        margin-top: unset !important;
-    }
-    a {
-        color: #007bff !important;
-    }
+            --primary-color: {{ $systemSettings['theme_primary_color'] ?? '#56cc99' }};
+            --secondary-color: {{ $systemSettings['theme_secondary_color'] ?? '#215679' }};
+            --secondary-color1: {{ $systemSettings['theme_secondary_color_1'] ?? '#38a3a5' }};
+            --primary-background-color: {{ $systemSettings['theme_primary_background_color'] ?? '#f2f5f7' }};
+            --text--secondary-color: {{ $systemSettings['theme_text_secondary_color'] ?? '#5c788c' }};
+        }
+        .modal .modal-dialog {
+            margin-top: unset !important;
+        }
+        a {
+            color: #007bff !important;
+        }
     </style>
-
 </head>
 
 <body>
@@ -85,17 +81,17 @@
                             <form action="{{ route('login') }}" id="frmLogin" method="POST" class="pt-3">
                                 @csrf
                                 <div class="form-group">
-                                    <label for="email">{{ __('email') }}</label>
+                                    <label for="email">{{ __('general.email') }}</label>
                                     <input id="email" type="email" class="form-control rounded-lg form-control-lg"
                                         name="email" value="{{ old('email') }}" required autocomplete="email"
-                                        autofocus placeholder="{{ __('email') }}">
+                                        autofocus placeholder="{{ __('general.email') }}">
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">{{ __('password') }}</label>
+                                    <label for="password">{{ __('general.password') }}</label>
                                     <div class="input-group">
                                         <input id="password" type="password"
                                             class="form-control rounded-lg form-control-lg" name="password" required
-                                            autocomplete="current-password" placeholder="{{ __('password') }}">
+                                            autocomplete="current-password" placeholder="{{ __('general.password') }}">
                                         <div class="input-group-append" cursor="pointer" id="togglePasswordShowHide">
                                             <span class="input-group-text">
                                                 <i class="fa fa-eye-slash" id="togglePassword"></i>
@@ -107,17 +103,17 @@
                                 @if (Route::has('password.request'))
                                     <div class="my-2 d-flex justify-content-end align-items-center">
                                         <a class="auth-link text-blue" href="{{ route('password.request') }}">
-                                            {{ __('forgot_password') }}
+                                            {{ __('general.forgot_password') }}
                                         </a>
                                     </div>
                                 @endif
                                 <div class="mt-3">
-                                    <input type="submit" name="btnlogin" id="login_btn" value="{{ __('login') }}"
+                                    <input type="submit" name="btnlogin" id="login_btn" value="{{ __('general.login') }}"
                                         class="btn btn-block btn-theme btn-lg font-weight-medium auth-form-btn rounded-lg" />
                                 </div>
                                 <div class="my-2 d-flex justify-content-end align-items-center">
                                     <a class="text-blue" href="#" data-bs-toggle="modal" data-bs-dismiss="offcanvas" data-bs-target="#staticBackdrop">
-                                        {{ __('New user Sign up to manage your school activities seamlessly') }}
+                                        {{ __('general.new_user_signup') }}
                                     </a>
                                 </div>
                             </form>
