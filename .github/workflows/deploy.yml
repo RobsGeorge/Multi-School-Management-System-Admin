@@ -1,48 +1,32 @@
-name: Deploy to VPS
+name:  Deploy Laravel App to VPS
 
 on:
   push:
     branches:
-      - main # Or your main branch name, e.g., master, production
+      - main  # or your deployment branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production # Optional: Link to a GitHub environment for secrets management
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - name:  Checkout Repo
+      uses: actions/checkout@v3
 
-    - name: Set up SSH agent
+    - name:  Setup SSH
       uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Deploy to VPS
+    - name:  Deploy via SSH
       run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
-          # Navigate to your project directory on the VPS
-          cd /var/www/spims.avapachmius-nasrcity.com
-
-          # Pull the latest changes from your Git repository
-          # Make sure your project directory on the VPS is also a Git repo (git init, git remote add origin ...)
-          git pull origin main # Or your branch name (e.g., master, production)
-
-          # Install Composer dependencies (if you use Composer)
-          composer install --no-dev --optimize-autoloader
-
-          # Run database migrations (if you use a database)
+        ssh -o StrictHostKeyChecking=no root@srv917148.hstgr.cloud << 'EOF'
+          cd /var/www/spims
+          git pull origin main
+          composer install --no-interaction --prefer-dist --optimize-autoloader
           php artisan migrate --force
-
-          # Clear and optimize Laravel caches
           php artisan config:cache
           php artisan route:cache
           php artisan view:cache
-          php artisan optimize:clear
-
-          # Restart PHP-FPM if you use it (important for new code to take effect)
-          # sudo systemctl reload php8.x-fpm # Replace 8.x with your PHP version
-          # sudo systemctl restart apache2 # Or reload, based on your preference
-
+          chown -R www-data:www-data /var/www/spims
         EOF
