@@ -16,19 +16,13 @@ use App\Services\CachingService;
 use App\Services\ResponseService;
 use App\Services\SchoolDataService;
 use App\Services\SubscriptionService;
-<<<<<<< HEAD
 use App\Services\SubdomainService;
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Log;
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -47,14 +41,9 @@ class SchoolController extends Controller {
     private SubscriptionService $subscriptionService;
     private SchoolSettingInterface $schoolSettings;
     private GuidanceInterface $guidance;
-<<<<<<< HEAD
     private SubdomainService $subdomainService;
 
     public function __construct(SchoolInterface $school, UserInterface $user, PackageInterface $package, CachingService $cache, SubscriptionService $subscriptionService, SchoolSettingInterface $schoolSettings, GuidanceInterface $guidance, SubdomainService $subdomainService) {
-=======
-
-    public function __construct(SchoolInterface $school, UserInterface $user, PackageInterface $package, CachingService $cache, SubscriptionService $subscriptionService, SchoolSettingInterface $schoolSettings, GuidanceInterface $guidance) {
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
         $this->schoolsRepository = $school;
         $this->userRepository = $user;
         $this->package = $package;
@@ -62,10 +51,7 @@ class SchoolController extends Controller {
         $this->subscriptionService = $subscriptionService;
         $this->schoolSettings = $schoolSettings;
         $this->guidance = $guidance;
-<<<<<<< HEAD
         $this->subdomainService = $subdomainService;
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
     }
 
 
@@ -110,16 +96,11 @@ class SchoolController extends Controller {
                 'support_phone' => $request->school_support_phone,
                 'tagline'       => $request->school_tagline,
                 'logo'          => $request->file('school_image'),
-<<<<<<< HEAD
                 // Don't set domain here - let SubdomainService handle it
-=======
-                'domain'        => $request->domain
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             );
             // Call store function of Schools Repository
             $schoolData = $this->schoolsRepository->create($school_data);
 
-<<<<<<< HEAD
             // Create subdomain for the school
             $subdomainResult = $this->subdomainService->createSubdomain($schoolData, $request->domain);
             
@@ -128,8 +109,6 @@ class SchoolController extends Controller {
                 ResponseService::errorResponse($subdomainResult['message']);
             }
 
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             $admin_data = array(
                 'first_name' => $request->admin_first_name,
                 'last_name'  => $request->admin_last_name,
@@ -216,13 +195,9 @@ class SchoolController extends Controller {
         return $templateContent;
     }
 
-    public function show() {
-<<<<<<< HEAD
+    public function show($id) {
         // Remove authentication check - allow unauthenticated access
         
-=======
-        ResponseService::noPermissionThenRedirect('schools-list');
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
         $offset = request('offset', 0);
         $limit = request('limit', 10);
         $sort = request('sort', 'id');
@@ -232,97 +207,6 @@ class SchoolController extends Controller {
         $showDeleted = request('show_deleted');
         $today_date = Carbon::now()->format('Y-m-d');
 
-<<<<<<< HEAD
-        try {
-            $sql = $this->schoolsRepository->builder()
-                ->with(['user:id,first_name,last_name,email,image,mobile'])
-                ->with(['subscription' => function($q) use($today_date){
-                    $q->whereDate('start_date','<=',$today_date)
-                      ->whereDate('end_date','>=',$today_date);
-                }])
-                ->with('subscription.package');
-                
-            // Optimize search query
-            if ($search) {
-                $sql->where(function ($query) use ($search) {
-                    $query->where('name', 'LIKE', "%$search%")
-                        ->orWhere('support_email', 'LIKE', "%$search%")
-                        ->orWhere('support_phone', 'LIKE', "%$search%")
-                        ->orWhere('tagline', 'LIKE', "%$search%")
-                        ->orWhere('address', 'LIKE', "%$search%")
-                        ->orWhereHas('user', function ($query) use ($search) {
-                            $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", "%$search%");
-                        });
-                });
-            }
-            
-            if (!empty($showDeleted)) {
-                $sql->onlyTrashed();
-            }
-
-            if ($package_id) {
-                $sql->whereHas('subscription',function($q) use($package_id, $today_date) {
-                    $q->where('package_id',$package_id)
-                      ->whereDate('start_date','<=',$today_date)
-                      ->whereDate('end_date','>=',$today_date);
-                });
-            }
-
-            $total = $sql->count();
-            
-            // Add timeout protection
-            if ($total > 10000) {
-                return response()->json([
-                    'error' => true,
-                    'message' => 'Too many records. Please use filters to narrow down results.',
-                    'total' => 0,
-                    'rows' => []
-                ]);
-            }
-
-            $sql->orderBy($sort, $order)->skip($offset)->take($limit);
-            $res = $sql->get();
-
-            $bulkData = array();
-            $bulkData['total'] = $total;
-            $rows = array();
-            $no = 1;
-
-            foreach ($res as $row) {
-                $tempRow = $row->toArray();
-                $tempRow['no'] = $no++;
-                $tempRow['active_plan'] = '-';
-                
-                if (count($row->subscription)) {
-                    $package = $row->subscription()->whereDate('start_date','<=',$today_date)->whereDate('end_date','>=',$today_date)->latest()->first();
-                    if ($package) {
-                        $tempRow['active_plan'] = $package->name;
-                    }
-                }
-                
-                // Remove operation buttons for unauthenticated access
-                $tempRow['operate'] = '';
-                $rows[] = $tempRow;
-            }
-
-            $bulkData['rows'] = $rows;
-            return response()->json($bulkData);
-            
-        } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Error in schools show method: ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            
-            return response()->json([
-                'error' => true,
-                'message' => 'An error occurred while loading schools data',
-                'total' => 0,
-                'rows' => []
-            ], 500);
-        }
-=======
         $sql = $this->schoolsRepository->builder()->with('user:id,first_name,last_name,email,image,mobile')->with(['subscription' => function($q) use($today_date){
             $q->whereDate('start_date','<=',$today_date)->whereDate('end_date','>=',$today_date);
         }])->with('subscription.package')
@@ -409,7 +293,6 @@ class SchoolController extends Controller {
 
         $bulkData['rows'] = $rows;
         return response()->json($bulkData);
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
     }
 
     public function update(Request $request, $id) {
@@ -664,31 +547,24 @@ class SchoolController extends Controller {
         ]);
 
         if ($validator->fails()) {
-<<<<<<< HEAD
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => $validator->errors()->first()
                 ], 422);
             }
-=======
-            // ResponseService::validationError($validator->errors()->first());
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             return Redirect::back()->withErrors($validator);
         }
 
         $school = $this->schoolsRepository->builder()->where('support_email', $request->school_support_email)->withTrashed()->first();
         $user = $this->userRepository->builder()->where('email', $request->admin_email)->withTrashed()->first();
         if ($school || $user) {
-<<<<<<< HEAD
             if ($request->ajax()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'School or User email already exists'
                 ], 422);
             }
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             return redirect('/login')->with('error', 'School or User email already exists');
         }
 
@@ -746,47 +622,30 @@ class SchoolController extends Controller {
                 'email_body'  => $email_body
             ];
 
-<<<<<<< HEAD
-=======
-            $data = [
-                'subject'     => 'Welcome to ' . $request->school_name,
-                'email'       => $request->admin_email,
-                'email_body'  => $email_body
-            ];
-
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             Mail::send('schools.email', $data, static function ($message) use ($data) {
                 $message->to($data['email'])->subject($data['subject']);
             });
 
-<<<<<<< HEAD
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'School Registration Successful'
                 ]);
             }
-
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
             return redirect('/login')->with('success', 'School Registration Successful');
 
         } catch (Throwable $e) {
             if (Str::contains($e->getMessage(), ['Failed', 'Mail', 'Mailer', 'MailManager'])) {
-<<<<<<< HEAD
                 if ($request->ajax()) {
                     return response()->json([
                         'success' => true,
                         'message' => 'School Registration Successfully. But Email not sent'
                     ]);
                 }
-=======
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
                 return redirect('/login')->with('success', 'School Registration Successfully. But Email not sent');
             } else {
                 DB::rollBack();
                 ResponseService::logErrorResponse($e, "School Controller -> Registration method");
-<<<<<<< HEAD
                 if ($request->ajax()) {
                     return response()->json([
                         'success' => false,
@@ -834,12 +693,6 @@ class SchoolController extends Controller {
         } catch (\Exception $e) {
             ResponseService::logErrorResponse($e, "School Controller -> getAllSubdomainHealth method");
             ResponseService::errorResponse('Failed to get subdomain health statuses');
-=======
-                ResponseService::errorResponse();
-            }
-            
-            
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
         }
     }
 

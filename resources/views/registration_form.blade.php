@@ -12,14 +12,8 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-<<<<<<< HEAD
-                    <form action="{{ url('schools/registration') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-=======
                     <form class="create-form" action="{{ url('schools/registration') }}" method="post">
                         @csrf
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327
                         <div class="schoolFormWrapper">
                             <div class="headingWrapper">
                                 <span>{{ __('create_school') }}</span>
@@ -125,7 +119,6 @@
             </div>
         </div>
     </div>
-<<<<<<< HEAD
 </div>
 
 <script>
@@ -186,6 +179,3 @@ $(document).ready(function() {
     });
 });
 </script>
-=======
-</div>
->>>>>>> 202acca461654887c04d0af65b62a682ccaa1327

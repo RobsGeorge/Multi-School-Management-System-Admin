@@ -19,6 +19,7 @@ use App\Services\BootstrapTableService;
 use App\Services\CachingService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
@@ -72,7 +73,31 @@ class ClassSchoolController extends Controller {
             'medium_id'      => 'required|numeric',
             'name'           => [
                 'required',
-                new uniqueForSchool('classes', ['name' => $request->name, 'medium_id' => $request->medium_id, 'stream_id' => $request->stream_id])
+                function($attribute, $value, $fail) use ($request) {
+                    // Custom validation for unique class name per medium and stream
+                    $query = DB::table('classes')->where('name', $value)
+                        ->where('medium_id', $request->medium_id)
+                        ->where('school_id', Auth::user()->school_id);
+                    
+                    if (!empty($request->stream_id) && is_array($request->stream_id)) {
+                        // If streams are selected, check uniqueness for each stream
+                        foreach ($request->stream_id as $streamId) {
+                            $streamQuery = clone $query;
+                            $streamQuery->where('stream_id', $streamId);
+                            if ($streamQuery->exists()) {
+                                $fail('The class name already exists for this medium and stream combination.');
+                                return;
+                            }
+                        }
+                    } else {
+                        // If no streams selected, check uniqueness with null stream_id
+                        $query->whereNull('stream_id');
+                        if ($query->exists()) {
+                            $fail('The class name already exists for this medium.');
+                            return;
+                        }
+                    }
+                }
             ],
             'stream_id' => 'nullable|array',
             'shift_id'       => 'nullable|numeric',
@@ -88,7 +113,7 @@ class ClassSchoolController extends Controller {
             DB::beginTransaction();
             // $request->stream_id = $request->stream_id ?? [0];
             /* Create Class */
-            if (!empty($request->stream_id) && $request->stream_id[0] != null) {
+            if (!empty($request->stream_id) && is_array($request->stream_id) && count($request->stream_id) > 0) {
                 foreach ($request->stream_id as $stream) {
                     $classDetails = [
                         ...$request->all(),
