@@ -18,7 +18,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <h4 class="card-title">{{ __('All Schools Subdomain Status') }}</h4>
-                            <button class="btn btn-primary" onclick="refreshStatus()">
+                            <button class="btn btn-primary" onclick="if(typeof refreshStatus === 'function'){refreshStatus();}">
                                 <i class="fa fa-refresh"></i> {{ __('Refresh') }}
                             </button>
                         </div>
@@ -83,7 +83,7 @@ function displayStatus(data) {
         html += '<td><a href="' + (health.full_url || '#') + '" target="_blank">' + (health.full_url || 'N/A') + '</a></td>';
         html += '<td><span class="badge ' + statusClass + '">' + statusIcon + ' ' + health.message + '</span></td>';
         html += '<td>';
-        html += '<button class="btn btn-sm btn-info" onclick="checkSingleStatus(' + item.school_id + ')">';
+        html += '<button class="btn btn-sm btn-info" onclick="if(typeof checkSingleStatus === \'function\'){checkSingleStatus(' + item.school_id + ');} ">';
         html += '<i class="fa fa-refresh"></i> {{ __("Check") }}';
         html += '</button>';
         html += '</td>';
