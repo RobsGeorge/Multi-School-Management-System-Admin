@@ -850,18 +850,18 @@ Route::get('dummy-seeder', static function () {
 //    // Now $referencingTables contains an array of tables that reference 'A'
 //});
 
-/*Route::get('/js/lang', static function () {
+Route::get('/js/lang', static function () {
     //    https://medium.com/@serhii.matrunchyk/using-laravel-localization-with-javascript-and-vuejs-23064d0c210e
     header('Content-Type: text/javascript');
     $labels = \Illuminate\Support\Facades\Cache::remember('lang.js', 3600, static function () {
-        $lang = app()->getLocale();
+        //$lang = app()->getLocale();
+        $lang = 'en';
         $files = resource_path('lang/' . $lang . '.json');
         return File::get($files);
     });
     echo('window.trans = ' . $labels);
     exit();
 })->name('assets.lang');
-*/
 
 Route::get('test-code', static function () {
 
